@@ -66,7 +66,7 @@ const Dashboard = () => {
               isCharging={isCharging}
               onToggleCharging={() => setIsCharging(!isCharging)}
             />
-            <TripInfo speed={speed} />
+            <TripInfo />
           </div>
 
           {/* Cab Notifications */}

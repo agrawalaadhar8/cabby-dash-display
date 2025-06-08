@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { battery } from 'lucide-react';
+import { Battery } from 'lucide-react';
 
 interface BatteryIndicatorProps {
   level: number;

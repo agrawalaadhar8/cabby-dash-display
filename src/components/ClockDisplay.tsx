@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 const ClockDisplay = () => {
   const [time, setTime] = useState(new Date());

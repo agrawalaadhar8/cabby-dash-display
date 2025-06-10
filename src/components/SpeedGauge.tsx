@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Battery, Car, Zap, Eco } from 'lucide-react';
+import { Battery, Car, Zap, Leaf } from 'lucide-react';
 
 interface SpeedGaugeProps {
   speed: number;
@@ -127,7 +126,7 @@ const SpeedGauge = ({ speed, batteryLevel = 78, isCharging = false }: SpeedGauge
         {/* Top Left - ECO Mode */}
         <div className="absolute top-2 left-2">
           <div className="bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg p-2">
-            <Eco size={16} className="text-green-400" />
+            <Leaf size={16} className="text-green-400" />
           </div>
         </div>
 

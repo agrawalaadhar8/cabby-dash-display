@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
 import ClockDisplay from './ClockDisplay';
@@ -77,7 +76,7 @@ const Dashboard = () => {
               <ClockDisplay />
             </div>
             <TripInfo />
-            <CabNotifications onToggleCharging={() => setIsCharging(!isCharging)} />
+            <CabNotifications />
           </div>
         </div>
       </div>

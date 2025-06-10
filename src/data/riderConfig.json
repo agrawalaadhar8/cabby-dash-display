@@ -1,0 +1,25 @@
+
+{
+  "rider": {
+    "name": "John Smith",
+    "phone": "+1 (555) 123-4567",
+    "rating": 4.8,
+    "pickupLocation": "Central Station, Platform 2",
+    "dropLocation": "Downtown Mall, Main Entrance",
+    "estimatedTime": "12 min",
+    "distance": "5.2 km",
+    "fare": "$18.50"
+  },
+  "vehicle": {
+    "model": "Tesla Model Y",
+    "licensePlate": "TXI-2024",
+    "batteryCapacity": "75 kWh",
+    "range": "450 km"
+  },
+  "trip": {
+    "tripId": "TXI-789456",
+    "startTime": "14:30",
+    "rideType": "Premium",
+    "paymentMethod": "Credit Card"
+  }
+}

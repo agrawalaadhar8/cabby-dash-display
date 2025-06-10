@@ -5,6 +5,8 @@ import BatteryIndicator from './BatteryIndicator';
 import ClockDisplay from './ClockDisplay';
 import CabNotifications from './CabNotifications';
 import TripInfo from './TripInfo';
+import BatterySwapAnimation from './BatterySwapAnimation';
+import RiderDetails from './RiderDetails';
 
 const Dashboard = () => {
   const [speed, setSpeed] = useState(0);
@@ -39,59 +41,86 @@ const Dashboard = () => {
   }, [isCharging]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-2">
       <div className="max-w-7xl mx-auto">
         {/* Top Status Bar */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-4 bg-gray-800/50 rounded-lg p-3">
           <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold text-sky-400">Vehicle Dashboard</h1>
+            <h1 className="text-xl font-bold text-sky-400">TAXI MID</h1>
             <div className="text-sm text-gray-400">
-              Status: <span className="text-green-400">Active</span>
+              Status: <span className="text-green-400">ACTIVE</span>
             </div>
           </div>
           <ClockDisplay />
         </div>
 
-        {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Speed Gauge - Main Focus */}
-          <div className="lg:col-span-1">
-            <SpeedGauge speed={speed} />
+        {/* Main MID Layout - 3 Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-4">
+          
+          {/* Left Column - Driver & Vehicle Info */}
+          <div className="lg:col-span-1 space-y-4">
+            <div className="bg-gray-800 border border-gray-600 rounded-2xl p-4">
+              <h3 className="text-md font-semibold text-sky-400 mb-3">Vehicle</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Model:</span>
+                  <span className="text-white">Tesla Model Y</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Plate:</span>
+                  <span className="text-white">TXI-2024</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Range:</span>
+                  <span className="text-white">{Math.round(batteryLevel * 3.2)} km</span>
+                </div>
+              </div>
+            </div>
+            
+            <BatterySwapAnimation />
           </div>
 
-          {/* Battery and Trip Info */}
-          <div className="lg:col-span-1 space-y-6">
-            <BatteryIndicator 
-              level={batteryLevel} 
-              isCharging={isCharging}
-              onToggleCharging={() => setIsCharging(!isCharging)}
-            />
-            <TripInfo />
+          {/* Center Column - Speed Gauge (Main Focus) */}
+          <div className="lg:col-span-3 flex items-center justify-center">
+            <div className="w-full max-w-md">
+              <SpeedGauge speed={speed} />
+            </div>
           </div>
 
-          {/* Cab Notifications */}
-          <div className="lg:col-span-1">
-            <CabNotifications />
+          {/* Right Column - Rider & Trip Details */}
+          <div className="lg:col-span-1 space-y-4">
+            <RiderDetails />
           </div>
         </div>
 
-        {/* Bottom Controls */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-4 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-2xl mb-2">🚗</div>
-            <div className="text-sm text-gray-300">Vehicle Info</div>
+        {/* Bottom Row - Battery, Trip Info, and Notifications */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+          <BatteryIndicator 
+            level={batteryLevel} 
+            isCharging={isCharging}
+            onToggleCharging={() => setIsCharging(!isCharging)}
+          />
+          <TripInfo />
+          <CabNotifications />
+        </div>
+
+        {/* Bottom Controls - Compact */}
+        <div className="grid grid-cols-4 gap-2">
+          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
+            <div className="text-lg mb-1">🚗</div>
+            <div className="text-xs text-gray-300">Vehicle</div>
           </button>
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-4 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-2xl mb-2">⚙️</div>
-            <div className="text-sm text-gray-300">Settings</div>
+          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
+            <div className="text-lg mb-1">⚙️</div>
+            <div className="text-xs text-gray-300">Settings</div>
           </button>
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-4 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-2xl mb-2">📍</div>
-            <div className="text-sm text-gray-300">Navigation</div>
+          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
+            <div className="text-lg mb-1">📍</div>
+            <div className="text-xs text-gray-300">Navigation</div>
           </button>
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-4 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-2xl mb-2">📞</div>
-            <div className="text-sm text-gray-300">Emergency</div>
+          <button className="bg-red-700 hover:bg-red-600 border border-red-500 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
+            <div className="text-lg mb-1">🚨</div>
+            <div className="text-xs text-gray-300">Emergency</div>
           </button>
         </div>
       </div>

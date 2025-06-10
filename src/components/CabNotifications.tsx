@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 interface Notification {
@@ -12,6 +11,7 @@ interface Notification {
 
 const CabNotifications = () => {
   const [rideStatus, setRideStatus] = useState<'idle' | 'picking_up' | 'in_ride' | 'dropping_off'>('idle');
+  const [isOnline, setIsOnline] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: '1',
@@ -31,8 +31,9 @@ const CabNotifications = () => {
   ]);
 
   const getStatusColor = () => {
+    if (!isOnline) return 'bg-gray-600';
     switch (rideStatus) {
-      case 'idle': return 'bg-gray-600';
+      case 'idle': return 'bg-green-600';
       case 'picking_up': return 'bg-yellow-500';
       case 'in_ride': return 'bg-green-500';
       case 'dropping_off': return 'bg-blue-500';
@@ -41,6 +42,7 @@ const CabNotifications = () => {
   };
 
   const getStatusText = () => {
+    if (!isOnline) return 'Offline';
     switch (rideStatus) {
       case 'idle': return 'Available';
       case 'picking_up': return 'En Route to Pickup';
@@ -57,6 +59,14 @@ const CabNotifications = () => {
       case 'payment': return '💳';
       case 'rating': return '⭐';
       default: return 'ℹ️';
+    }
+  };
+
+  const toggleOnlineStatus = () => {
+    setIsOnline(!isOnline);
+    if (isOnline) {
+      // Going offline - reset to idle state
+      setRideStatus('idle');
     }
   };
 
@@ -92,7 +102,8 @@ const CabNotifications = () => {
         <div className={`${getStatusColor()} rounded-lg p-4 text-center`}>
           <div className="text-lg font-bold text-white">{getStatusText()}</div>
           <div className="text-sm text-gray-200 mt-1">
-            {rideStatus === 'idle' && 'Ready for new rides'}
+            {!isOnline && 'Driver offline'}
+            {isOnline && rideStatus === 'idle' && 'Ready for new rides'}
             {rideStatus === 'picking_up' && 'ETA: 5 minutes'}
             {rideStatus === 'in_ride' && 'Destination: Downtown'}
             {rideStatus === 'dropping_off' && 'ETA: 2 minutes'}
@@ -102,7 +113,7 @@ const CabNotifications = () => {
 
       {/* Action Buttons */}
       <div className="mb-6 space-y-3">
-        {rideStatus === 'picking_up' && (
+        {rideStatus === 'picking_up' && isOnline && (
           <button
             onClick={startRide}
             className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
@@ -110,7 +121,7 @@ const CabNotifications = () => {
             Start Ride
           </button>
         )}
-        {rideStatus === 'in_ride' && (
+        {rideStatus === 'in_ride' && isOnline && (
           <button
             onClick={endRide}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
@@ -119,8 +130,15 @@ const CabNotifications = () => {
           </button>
         )}
         {rideStatus === 'idle' && (
-          <button className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-            Go Online
+          <button 
+            onClick={toggleOnlineStatus}
+            className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+              isOnline 
+                ? 'bg-red-600 hover:bg-red-700 text-white' 
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
+          >
+            {isOnline ? 'Go Offline' : 'Go Online'}
           </button>
         )}
       </div>
@@ -149,7 +167,7 @@ const CabNotifications = () => {
                 <div className="text-xs text-gray-400">{notification.time}</div>
               </div>
               
-              {notification.type === 'pickup' && rideStatus === 'idle' && (
+              {notification.type === 'pickup' && rideStatus === 'idle' && isOnline && (
                 <div className="mt-3 flex space-x-2">
                   <button
                     onClick={acceptRide}

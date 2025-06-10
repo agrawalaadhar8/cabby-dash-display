@@ -8,65 +8,122 @@ interface SpeedGaugeProps {
 const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
-  const rotation = (percentage / 100) * 270 - 135; // 270 degree arc starting from -135deg
-
+  
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-3xl p-8 shadow-2xl">
-      <h3 className="text-2xl font-bold text-sky-400 mb-6 text-center">SPEED</h3>
+    <div className="relative w-96 h-96 flex items-center justify-center">
+      {/* Outer Glow Ring */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 via-transparent to-cyan-500/20 blur-sm"></div>
       
-      <div className="relative w-80 h-80 mx-auto">
-        {/* Outer ring */}
-        <div className="absolute inset-0 rounded-full border-8 border-gray-700 shadow-inner"></div>
-        
-        {/* Speed arc background */}
-        <svg className="absolute inset-4 w-72 h-72 transform -rotate-45" viewBox="0 0 100 100">
-          <path
-            d="M 15 50 A 35 35 0 1 1 85 50"
+      {/* Main Circular Gauge */}
+      <div className="relative w-80 h-80">
+        {/* Background Circle */}
+        <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+          {/* Background arc */}
+          <circle
+            cx="100"
+            cy="100"
+            r="85"
             fill="none"
-            stroke="#374151"
-            strokeWidth="6"
+            stroke="rgba(55, 65, 81, 0.3)"
+            strokeWidth="3"
+            strokeDasharray="534.07"
             strokeLinecap="round"
           />
-          {/* Active speed arc */}
-          <path
-            d="M 15 50 A 35 35 0 1 1 85 50"
+          
+          {/* Progress arc with glow effect */}
+          <circle
+            cx="100"
+            cy="100"
+            r="85"
             fill="none"
-            stroke="#0EA5E9"
-            strokeWidth="6"
+            stroke="url(#speedGradient)"
+            strokeWidth="4"
+            strokeDasharray="534.07"
+            strokeDashoffset={534.07 - (534.07 * percentage) / 100}
             strokeLinecap="round"
-            strokeDasharray={`${percentage * 2.2} 220`}
-            className="transition-all duration-500 ease-out"
+            className="transition-all duration-1000 ease-out"
+            style={{
+              filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.8))'
+            }}
           />
+          
+          {/* Gradient Definition */}
+          <defs>
+            <linearGradient id="speedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="50%" stopColor="#0891b2" />
+              <stop offset="100%" stopColor="#0e7490" />
+            </linearGradient>
+          </defs>
         </svg>
 
-        {/* Speed needle */}
-        <div 
-          className="absolute top-1/2 left-1/2 w-1.5 h-32 bg-sky-400 origin-bottom transform -translate-x-1/2 -translate-y-full transition-transform duration-500 ease-out shadow-lg"
-          style={{ transform: `translate(-50%, -100%) rotate(${rotation}deg)` }}
-        ></div>
+        {/* Center Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          {/* Main Speed Display */}
+          <div className="text-center mb-2">
+            <div className="text-7xl font-mono font-bold text-white leading-none tracking-wider">
+              {Math.round(speed)}
+            </div>
+            <div className="text-xl text-cyan-400 font-semibold tracking-widest mt-1">
+              km/h
+            </div>
+          </div>
 
-        {/* Center hub */}
-        <div className="absolute top-1/2 left-1/2 w-8 h-8 bg-sky-400 rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-lg border-2 border-gray-800"></div>
-
-        {/* Speed readout */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-12 text-center">
-          <div className="text-6xl font-bold text-white font-mono">{Math.round(speed)}</div>
-          <div className="text-lg text-gray-400 font-semibold">km/h</div>
+          {/* Battery Percentage */}
+          <div className="text-center mt-4">
+            <div className="text-2xl font-mono font-bold text-green-400">
+              100%
+            </div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider">
+              Fully Charged
+            </div>
+          </div>
         </div>
 
-        {/* Digital displays */}
-        <div className="absolute top-6 left-1/2 transform -translate-x-1/2 bg-black rounded px-3 py-1">
-          <div className="text-green-400 text-sm font-mono">{speed > 0 ? 'DRIVE' : 'PARK'}</div>
+        {/* Speed Markers */}
+        <div className="absolute inset-0">
+          {[0, 30, 60, 90, 120].map((marker, index) => {
+            const angle = (index * 270) / 4 - 135; // Distribute across 270 degrees
+            const radian = (angle * Math.PI) / 180;
+            const x = 100 + 75 * Math.cos(radian);
+            const y = 100 + 75 * Math.sin(radian);
+            
+            return (
+              <div
+                key={marker}
+                className="absolute text-xs text-gray-400 font-mono"
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  transform: 'translate(-50%, -50%)'
+                }}
+              >
+                {marker}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Speed markers with better styling */}
-      <div className="flex justify-between text-sm text-gray-400 mt-6 px-4">
-        <span className="font-mono">0</span>
-        <span className="font-mono">30</span>
-        <span className="font-mono">60</span>
-        <span className="font-mono">90</span>
-        <span className="font-mono">120</span>
+      {/* Mode Indicators */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+        <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg px-4 py-2">
+          <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
+            {speed > 0 ? 'DRIVE' : 'PARK'}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Status */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <div className="flex space-x-4 text-xs text-gray-400 font-mono">
+          <span className="flex items-center">
+            <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+            156 kW
+          </span>
+          <span>•</span>
+          <span>ECO MODE</span>
+        </div>
       </div>
     </div>
   );

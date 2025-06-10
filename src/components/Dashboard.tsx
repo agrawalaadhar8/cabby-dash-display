@@ -41,38 +41,56 @@ const Dashboard = () => {
   }, [isCharging]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-2">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Background with subtle gradient and grid pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto p-4">
         {/* Top Status Bar */}
-        <div className="flex justify-between items-center mb-4 bg-gray-800/50 rounded-lg p-3">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-bold text-sky-400">TAXI MID</h1>
+        <div className="flex justify-between items-center mb-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
+          <div className="flex items-center space-x-6">
+            <h1 className="text-2xl font-bold text-cyan-400 tracking-wider">ECO MODE</h1>
             <div className="text-sm text-gray-400">
-              Status: <span className="text-green-400">ACTIVE</span>
+              Status: <span className="text-green-400 font-semibold">ACTIVE</span>
+            </div>
+            <div className="text-sm text-gray-400">
+              Range: <span className="text-cyan-400 font-mono">{Math.round(batteryLevel * 3.2)} km</span>
             </div>
           </div>
           <ClockDisplay />
         </div>
 
-        {/* Main MID Layout - 3 Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-4">
+        {/* Main Dashboard Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
           
-          {/* Left Column - Driver & Vehicle Info */}
-          <div className="lg:col-span-1 space-y-4">
-            <div className="bg-gray-800 border border-gray-600 rounded-2xl p-4">
-              <h3 className="text-md font-semibold text-sky-400 mb-3">Vehicle</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Model:</span>
-                  <span className="text-white">Tesla Model Y</span>
+          {/* Left Side Info */}
+          <div className="lg:col-span-3 space-y-4">
+            <div className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
+              <h3 className="text-lg font-semibold text-cyan-400 mb-3 tracking-wide">VEHICLE</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Model</span>
+                  <span className="text-white font-mono">Tesla Model Y</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Plate:</span>
-                  <span className="text-white">TXI-2024</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Plate</span>
+                  <span className="text-white font-mono">TXI-2024</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Range:</span>
-                  <span className="text-white">{Math.round(batteryLevel * 3.2)} km</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Mode</span>
+                  <span className="text-green-400 font-mono">ECO</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Gear</span>
+                  <span className="text-cyan-400 font-mono">P</span>
                 </div>
               </div>
             </div>
@@ -80,21 +98,19 @@ const Dashboard = () => {
             <BatterySwapAnimation />
           </div>
 
-          {/* Center Column - Speed Gauge (Main Focus) */}
-          <div className="lg:col-span-3 flex items-center justify-center">
-            <div className="w-full max-w-md">
-              <SpeedGauge speed={speed} />
-            </div>
+          {/* Center - Main Speed Gauge */}
+          <div className="lg:col-span-6 flex items-center justify-center">
+            <SpeedGauge speed={speed} />
           </div>
 
-          {/* Right Column - Rider & Trip Details */}
-          <div className="lg:col-span-1 space-y-4">
+          {/* Right Side Info */}
+          <div className="lg:col-span-3 space-y-4">
             <RiderDetails />
           </div>
         </div>
 
-        {/* Bottom Row - Battery, Trip Info, and Notifications */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        {/* Bottom Row - Secondary Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <BatteryIndicator 
             level={batteryLevel} 
             isCharging={isCharging}
@@ -102,26 +118,6 @@ const Dashboard = () => {
           />
           <TripInfo />
           <CabNotifications />
-        </div>
-
-        {/* Bottom Controls - Compact */}
-        <div className="grid grid-cols-4 gap-2">
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-lg mb-1">🚗</div>
-            <div className="text-xs text-gray-300">Vehicle</div>
-          </button>
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-lg mb-1">⚙️</div>
-            <div className="text-xs text-gray-300">Settings</div>
-          </button>
-          <button className="bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-lg mb-1">📍</div>
-            <div className="text-xs text-gray-300">Navigation</div>
-          </button>
-          <button className="bg-red-700 hover:bg-red-600 border border-red-500 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105">
-            <div className="text-lg mb-1">🚨</div>
-            <div className="text-xs text-gray-300">Emergency</div>
-          </button>
         </div>
       </div>
     </div>

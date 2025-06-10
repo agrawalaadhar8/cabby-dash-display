@@ -1,10 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
 import ClockDisplay from './ClockDisplay';
 import CabNotifications from './CabNotifications';
-import TripInfo from './TripInfo';
-import BatterySwapAnimation from './BatterySwapAnimation';
-import RiderDetails from './RiderDetails';
 
 const Dashboard = () => {
   const [speed, setSpeed] = useState(0);
@@ -53,29 +51,25 @@ const Dashboard = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto p-4">
         {/* Single Row Dashboard Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center min-h-screen">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center min-h-screen">
           
-          {/* Left Side - Rider & Battery Swap */}
-          <div className="lg:col-span-1 space-y-4">
-            <RiderDetails />
-            <BatterySwapAnimation />
+          {/* Left Side - Clock */}
+          <div className="lg:col-span-1 flex justify-start">
+            <ClockDisplay />
           </div>
 
-          {/* Center - Main Speed Gauge with integrated info */}
-          <div className="lg:col-span-3 flex items-center justify-center">
+          {/* Center - Main Speed Gauge with integrated controls */}
+          <div className="lg:col-span-1 flex items-center justify-center">
             <SpeedGauge 
               speed={speed} 
               batteryLevel={batteryLevel}
               isCharging={isCharging}
+              onToggleCharging={() => setIsCharging(!isCharging)}
             />
           </div>
 
-          {/* Right Side - Trip Info & Notifications */}
-          <div className="lg:col-span-1 space-y-4">
-            <div className="flex justify-end mb-4">
-              <ClockDisplay />
-            </div>
-            <TripInfo />
+          {/* Right Side - Notifications */}
+          <div className="lg:col-span-1 flex justify-end">
             <CabNotifications />
           </div>
         </div>

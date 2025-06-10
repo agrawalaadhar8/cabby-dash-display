@@ -1,14 +1,23 @@
 
 import React from 'react';
+import { Battery, Car, Zap, Eco } from 'lucide-react';
 
 interface SpeedGaugeProps {
   speed: number;
+  batteryLevel?: number;
+  isCharging?: boolean;
 }
 
-const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
+const SpeedGauge = ({ speed, batteryLevel = 78, isCharging = false }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
   
+  const getBatteryColor = () => {
+    if (batteryLevel > 60) return '#10b981'; // green-500
+    if (batteryLevel > 30) return '#f59e0b'; // yellow-500
+    return '#ef4444'; // red-500
+  };
+
   return (
     <div className="relative w-96 h-96 flex items-center justify-center">
       {/* Outer Glow Ring */}
@@ -69,13 +78,23 @@ const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
             </div>
           </div>
 
-          {/* Battery Percentage */}
-          <div className="text-center mt-4">
-            <div className="text-2xl font-mono font-bold text-green-400">
-              100%
+          {/* Integrated Battery Status */}
+          <div className="text-center mt-2">
+            <div className="flex items-center justify-center space-x-2 mb-1">
+              <Battery 
+                size={16} 
+                style={{ color: getBatteryColor() }}
+                fill={getBatteryColor()}
+              />
+              {isCharging && (
+                <Zap size={12} className="text-yellow-400 animate-pulse" />
+              )}
+              <span className="text-lg font-mono font-bold" style={{ color: getBatteryColor() }}>
+                {Math.round(batteryLevel)}%
+              </span>
             </div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">
-              Fully Charged
+              {isCharging ? 'Charging' : batteryLevel > 20 ? 'Good' : 'Low'}
             </div>
           </div>
         </div>
@@ -103,26 +122,38 @@ const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
             );
           })}
         </div>
-      </div>
 
-      {/* Mode Indicators */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-        <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg px-4 py-2">
-          <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
-            {speed > 0 ? 'DRIVE' : 'PARK'}
+        {/* Corner Icons - Vehicle Info */}
+        {/* Top Left - ECO Mode */}
+        <div className="absolute top-2 left-2">
+          <div className="bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg p-2">
+            <Eco size={16} className="text-green-400" />
           </div>
         </div>
-      </div>
 
-      {/* Bottom Status */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-        <div className="flex space-x-4 text-xs text-gray-400 font-mono">
-          <span className="flex items-center">
-            <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-            156 kW
-          </span>
-          <span>•</span>
-          <span>ECO MODE</span>
+        {/* Top Right - Vehicle Type */}
+        <div className="absolute top-2 right-2">
+          <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg p-2">
+            <Car size={16} className="text-cyan-400" />
+          </div>
+        </div>
+
+        {/* Bottom Left - Gear/Mode */}
+        <div className="absolute bottom-2 left-2">
+          <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg px-3 py-1">
+            <div className="text-cyan-400 text-xs font-mono font-semibold">
+              {speed > 0 ? 'D' : 'P'}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Right - Power */}
+        <div className="absolute bottom-2 right-2">
+          <div className="bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg px-2 py-1">
+            <div className="text-green-400 text-xs font-mono font-semibold">
+              156kW
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
-import BatteryIndicator from './BatteryIndicator';
 import ClockDisplay from './ClockDisplay';
 import CabNotifications from './CabNotifications';
 import TripInfo from './TripInfo';
@@ -54,70 +53,32 @@ const Dashboard = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-4">
-        {/* Top Status Bar */}
-        <div className="flex justify-between items-center mb-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
-          <div className="flex items-center space-x-6">
-            <h1 className="text-2xl font-bold text-cyan-400 tracking-wider">ECO MODE</h1>
-            <div className="text-sm text-gray-400">
-              Status: <span className="text-green-400 font-semibold">ACTIVE</span>
-            </div>
-            <div className="text-sm text-gray-400">
-              Range: <span className="text-cyan-400 font-mono">{Math.round(batteryLevel * 3.2)} km</span>
-            </div>
-          </div>
-          <ClockDisplay />
-        </div>
-
-        {/* Main Dashboard Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        {/* Single Row Dashboard Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center min-h-screen">
           
-          {/* Left Side Info */}
-          <div className="lg:col-span-3 space-y-4">
-            <div className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
-              <h3 className="text-lg font-semibold text-cyan-400 mb-3 tracking-wide">VEHICLE</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Model</span>
-                  <span className="text-white font-mono">Tesla Model Y</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Plate</span>
-                  <span className="text-white font-mono">TXI-2024</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Mode</span>
-                  <span className="text-green-400 font-mono">ECO</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Gear</span>
-                  <span className="text-cyan-400 font-mono">P</span>
-                </div>
-              </div>
-            </div>
-            
+          {/* Left Side - Rider & Battery Swap */}
+          <div className="lg:col-span-1 space-y-4">
+            <RiderDetails />
             <BatterySwapAnimation />
           </div>
 
-          {/* Center - Main Speed Gauge */}
-          <div className="lg:col-span-6 flex items-center justify-center">
-            <SpeedGauge speed={speed} />
+          {/* Center - Main Speed Gauge with integrated info */}
+          <div className="lg:col-span-3 flex items-center justify-center">
+            <SpeedGauge 
+              speed={speed} 
+              batteryLevel={batteryLevel}
+              isCharging={isCharging}
+            />
           </div>
 
-          {/* Right Side Info */}
-          <div className="lg:col-span-3 space-y-4">
-            <RiderDetails />
+          {/* Right Side - Trip Info & Notifications */}
+          <div className="lg:col-span-1 space-y-4">
+            <div className="flex justify-end mb-4">
+              <ClockDisplay />
+            </div>
+            <TripInfo />
+            <CabNotifications onToggleCharging={() => setIsCharging(!isCharging)} />
           </div>
-        </div>
-
-        {/* Bottom Row - Secondary Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <BatteryIndicator 
-            level={batteryLevel} 
-            isCharging={isCharging}
-            onToggleCharging={() => setIsCharging(!isCharging)}
-          />
-          <TripInfo />
-          <CabNotifications />
         </div>
       </div>
     </div>

@@ -1,66 +1,19 @@
 
 import React from 'react';
-import { Battery, Zap, MapPin, Clock, Gauge } from 'lucide-react';
 
 interface SpeedGaugeProps {
   speed: number;
-  batteryLevel?: number;
-  isCharging?: boolean;
-  onToggleCharging?: () => void;
 }
 
-const SpeedGauge = ({ speed, batteryLevel = 78, isCharging = false, onToggleCharging }: SpeedGaugeProps) => {
+const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
   
-  const getBatteryColor = () => {
-    if (batteryLevel > 60) return '#10b981'; // green-500
-    if (batteryLevel > 30) return '#f59e0b'; // yellow-500
-    return '#ef4444'; // red-500
-  };
-
   return (
-    <div className="relative w-[600px] h-[600px] flex items-center justify-center">
+    <div className="relative w-96 h-96 flex items-center justify-center">
       {/* Outer Glow Ring */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 via-transparent to-cyan-500/20 blur-sm"></div>
       
-      {/* Top Semicircle - Trip Information */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-        <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600/50 rounded-2xl p-4 min-w-[280px]">
-          <h3 className="text-sm font-semibold text-sky-400 mb-3 text-center">Trip Info</h3>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1">
-                <MapPin className="h-3 w-3 text-green-400" />
-                <span className="text-gray-300">Distance</span>
-              </div>
-              <span className="text-white font-mono">12.5km</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1">
-                <Clock className="h-3 w-3 text-blue-400" />
-                <span className="text-gray-300">Duration</span>
-              </div>
-              <span className="text-white font-mono">25min</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1">
-                <Gauge className="h-3 w-3 text-yellow-400" />
-                <span className="text-gray-300">Avg Speed</span>
-              </div>
-              <span className="text-white font-mono">30km/h</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1">
-                <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                <span className="text-gray-300">Fare</span>
-              </div>
-              <span className="text-white font-mono">$15.80</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Circular Gauge */}
       <div className="relative w-80 h-80">
         {/* Background Circle */}
@@ -116,23 +69,13 @@ const SpeedGauge = ({ speed, batteryLevel = 78, isCharging = false, onToggleChar
             </div>
           </div>
 
-          {/* Integrated Battery Status */}
-          <div className="text-center mt-2">
-            <div className="flex items-center justify-center space-x-2 mb-1">
-              <Battery 
-                size={16} 
-                style={{ color: getBatteryColor() }}
-                fill={getBatteryColor()}
-              />
-              {isCharging && (
-                <Zap size={12} className="text-yellow-400 animate-pulse" />
-              )}
-              <span className="text-lg font-mono font-bold" style={{ color: getBatteryColor() }}>
-                {Math.round(batteryLevel)}%
-              </span>
+          {/* Battery Percentage */}
+          <div className="text-center mt-4">
+            <div className="text-2xl font-mono font-bold text-green-400">
+              100%
             </div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">
-              {isCharging ? 'Charging' : batteryLevel > 20 ? 'Good' : 'Low'}
+              Fully Charged
             </div>
           </div>
         </div>
@@ -162,49 +105,24 @@ const SpeedGauge = ({ speed, batteryLevel = 78, isCharging = false, onToggleChar
         </div>
       </div>
 
-      {/* Bottom Semicircle - Battery Swap Controls */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600/50 rounded-2xl p-4 min-w-[280px]">
-          <h3 className="text-sm font-semibold text-sky-400 mb-3 text-center">Battery Swap</h3>
-          <div className="flex flex-col items-center space-y-3">
-            {/* Battery Visualization */}
-            <div className="relative w-20 h-10">
-              <div className="w-20 h-10 bg-gray-700 rounded border-2 border-gray-500">
-                <div 
-                  className="h-full rounded transition-all duration-300"
-                  style={{ 
-                    width: `${batteryLevel}%`,
-                    backgroundColor: getBatteryColor()
-                  }}
-                ></div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">
-                {Math.round(batteryLevel)}%
-              </div>
-            </div>
-            
-            {/* Swap Status */}
-            <div className="text-center">
-              <div className="text-xs text-gray-300">
-                {isCharging ? 'Charging...' : 'Ready for swap'}
-              </div>
-              <div className="text-xs text-gray-400">
-                {isCharging ? 'Please wait' : 'Est: 2 min'}
-              </div>
-            </div>
-
-            {/* Swap/Charge Toggle */}
-            <button
-              onClick={onToggleCharging}
-              className={`px-4 py-1 rounded-lg text-xs font-medium transition-all ${
-                isCharging 
-                  ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
-                  : 'bg-sky-600 hover:bg-sky-700 text-white'
-              }`}
-            >
-              {isCharging ? 'Stop Charging' : 'Start Charging'}
-            </button>
+      {/* Mode Indicators */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+        <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg px-4 py-2">
+          <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
+            {speed > 0 ? 'DRIVE' : 'PARK'}
           </div>
+        </div>
+      </div>
+
+      {/* Bottom Status */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <div className="flex space-x-4 text-xs text-gray-400 font-mono">
+          <span className="flex items-center">
+            <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+            156 kW
+          </span>
+          <span>•</span>
+          <span>ECO MODE</span>
         </div>
       </div>
     </div>

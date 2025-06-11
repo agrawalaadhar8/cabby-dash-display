@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Battery, Car, Zap, Leaf, MapPin, Clock, Gauge } from 'lucide-react';
+import { Battery, Zap, MapPin, Clock, Gauge } from 'lucide-react';
 
 interface SpeedGaugeProps {
   speed: number;
@@ -159,39 +159,6 @@ const SpeedGauge = ({ speed, batteryLevel = 78, isCharging = false, onToggleChar
               </div>
             );
           })}
-        </div>
-
-        {/* Corner Icons - Vehicle Info */}
-        {/* Top Left - ECO Mode */}
-        <div className="absolute top-2 left-2">
-          <div className="bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg p-2">
-            <Leaf size={16} className="text-green-400" />
-          </div>
-        </div>
-
-        {/* Top Right - Vehicle Type */}
-        <div className="absolute top-2 right-2">
-          <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg p-2">
-            <Car size={16} className="text-cyan-400" />
-          </div>
-        </div>
-
-        {/* Bottom Left - Gear/Mode */}
-        <div className="absolute bottom-2 left-2">
-          <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg px-3 py-1">
-            <div className="text-cyan-400 text-xs font-mono font-semibold">
-              {speed > 0 ? 'D' : 'P'}
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Right - Power */}
-        <div className="absolute bottom-2 right-2">
-          <div className="bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg px-2 py-1">
-            <div className="text-green-400 text-xs font-mono font-semibold">
-              156kW
-            </div>
-          </div>
         </div>
       </div>
 

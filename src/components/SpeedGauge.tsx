@@ -11,7 +11,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
   
   // Calculate needle angle (180 degrees total arc, starting from 180 degrees to 0 degrees)
-  // 180 degrees = left bottom, 0 degrees = right bottom
+  // 180 degrees = left horizontal, 0 degrees = right horizontal
   const startAngle = 180;
   const endAngle = 0;
   const totalArc = 180;
@@ -29,9 +29,9 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
       <div className="relative w-80 h-80">
         {/* Background Circle */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
-          {/* Background arc - semicircle from left bottom to right bottom */}
+          {/* Background arc - semicircle from left horizontal to right horizontal */}
           <path
-            d="M 30 100 A 70 70 0 0 1 170 100"
+            d="M 30 100 A 70 70 0 0 0 170 100"
             fill="none"
             stroke="rgba(55, 65, 81, 0.3)"
             strokeWidth="3"
@@ -40,7 +40,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
           
           {/* Progress arc with glow effect */}
           <path
-            d="M 30 100 A 70 70 0 0 1 170 100"
+            d="M 30 100 A 70 70 0 0 0 170 100"
             fill="none"
             stroke="url(#speedGradient)"
             strokeWidth="4"
@@ -137,12 +137,12 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
           </div>
         </div>
 
-        {/* Speed Markers - Text labels */}
+        {/* Speed Markers - Text labels positioned above the arc */}
         <div className="absolute inset-0">
           {speedMarkers.map((marker, index) => {
             const angle = startAngle - (index * totalArc) / (speedMarkers.length - 1);
             const radian = (angle * Math.PI) / 180;
-            const radius = 85;
+            const radius = 90;
             const x = 50 + (radius * Math.cos(radian)) / 2;
             const y = 50 + (radius * Math.sin(radian)) / 2;
             

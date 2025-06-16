@@ -1,11 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
-import BatteryIndicator from './BatteryIndicator';
 import ClockDisplay from './ClockDisplay';
 import CabNotifications from './CabNotifications';
-import TripInfo from './TripInfo';
-import BatterySwapAnimation from './BatterySwapAnimation';
+import SwipeableInfoCard from './SwipeableInfoCard';
 import RiderDetails from './RiderDetails';
 
 const Dashboard = () => {
@@ -71,52 +69,28 @@ const Dashboard = () => {
         {/* Main Dashboard Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
           
-          {/* Left Side Info */}
-          <div className="lg:col-span-3 space-y-4">
-            <div className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
-              <h3 className="text-lg font-semibold text-cyan-400 mb-3 tracking-wide">VEHICLE</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Model</span>
-                  <span className="text-white font-mono">Tesla Model Y</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Plate</span>
-                  <span className="text-white font-mono">TXI-2024</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Mode</span>
-                  <span className="text-green-400 font-mono">ECO</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Gear</span>
-                  <span className="text-cyan-400 font-mono">P</span>
-                </div>
-              </div>
-            </div>
-            
-            <BatterySwapAnimation />
+          {/* Left Side - Swipeable Info Card */}
+          <div className="lg:col-span-3">
+            <SwipeableInfoCard 
+              batteryLevel={batteryLevel}
+              isCharging={isCharging}
+              onToggleCharging={() => setIsCharging(!isCharging)}
+            />
           </div>
 
           {/* Center - Main Speed Gauge */}
           <div className="lg:col-span-6 flex items-center justify-center">
-            <SpeedGauge speed={speed} />
+            <SpeedGauge speed={speed} batteryLevel={batteryLevel} />
           </div>
 
-          {/* Right Side Info */}
-          <div className="lg:col-span-3 space-y-4">
+          {/* Right Side - Rider Details */}
+          <div className="lg:col-span-3">
             <RiderDetails />
           </div>
         </div>
 
-        {/* Bottom Row - Secondary Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <BatteryIndicator 
-            level={batteryLevel} 
-            isCharging={isCharging}
-            onToggleCharging={() => setIsCharging(!isCharging)}
-          />
-          <TripInfo />
+        {/* Bottom Row - Notifications */}
+        <div className="grid grid-cols-1">
           <CabNotifications />
         </div>
       </div>

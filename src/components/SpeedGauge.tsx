@@ -3,11 +3,15 @@ import React from 'react';
 
 interface SpeedGaugeProps {
   speed: number;
+  batteryLevel: number;
 }
 
-const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
+const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
+  
+  // Calculate needle angle (270 degrees total, starting from -135 degrees)
+  const needleAngle = -135 + (percentage * 270) / 100;
   
   return (
     <div className="relative w-96 h-96 flex items-center justify-center">
@@ -47,6 +51,32 @@ const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
             }}
           />
           
+          {/* Speed Needle */}
+          <g className="transition-transform duration-500 ease-out" style={{ transformOrigin: '100px 100px', transform: `rotate(${needleAngle}deg)` }}>
+            <line
+              x1="100"
+              y1="100"
+              x2="100"
+              y2="25"
+              stroke="#ef4444"
+              strokeWidth="3"
+              strokeLinecap="round"
+              style={{
+                filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.8))'
+              }}
+            />
+            {/* Needle center dot */}
+            <circle
+              cx="100"
+              cy="100"
+              r="6"
+              fill="#ef4444"
+              style={{
+                filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.8))'
+              }}
+            />
+          </g>
+          
           {/* Gradient Definition */}
           <defs>
             <linearGradient id="speedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -72,21 +102,22 @@ const SpeedGauge = ({ speed }: SpeedGaugeProps) => {
           {/* Battery Percentage */}
           <div className="text-center mt-4">
             <div className="text-2xl font-mono font-bold text-green-400">
-              100%
+              {Math.round(batteryLevel)}%
             </div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">
-              Fully Charged
+              {batteryLevel > 90 ? 'Fully Charged' : batteryLevel > 20 ? 'Good' : 'Low Battery'}
             </div>
           </div>
         </div>
 
-        {/* Speed Markers */}
+        {/* Speed Markers - Fixed positioning */}
         <div className="absolute inset-0">
           {[0, 30, 60, 90, 120].map((marker, index) => {
             const angle = (index * 270) / 4 - 135; // Distribute across 270 degrees
             const radian = (angle * Math.PI) / 180;
-            const x = 100 + 75 * Math.cos(radian);
-            const y = 100 + 75 * Math.sin(radian);
+            const radius = 90; // Distance from center
+            const x = 50 + (radius * Math.cos(radian)) / 2; // Adjusted for percentage positioning
+            const y = 50 + (radius * Math.sin(radian)) / 2; // Adjusted for percentage positioning
             
             return (
               <div

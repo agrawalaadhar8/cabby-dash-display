@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
 import ClockDisplay from './ClockDisplay';
-import CabNotifications from './CabNotifications';
 import SwipeableInfoCard from './SwipeableInfoCard';
 import RiderDetails from './RiderDetails';
 
@@ -10,6 +9,8 @@ const Dashboard = () => {
   const [speed, setSpeed] = useState(0);
   const [batteryLevel, setBatteryLevel] = useState(78);
   const [isCharging, setIsCharging] = useState(false);
+  const [rideStatus, setRideStatus] = useState<'idle' | 'picking_up' | 'in_ride' | 'dropping_off'>('idle');
+  const [isOnline, setIsOnline] = useState(false);
 
   // Simulate speed changes for demo
   useEffect(() => {
@@ -37,6 +38,26 @@ const Dashboard = () => {
 
     return () => clearInterval(interval);
   }, [isCharging]);
+
+  const handleToggleOnlineStatus = () => {
+    setIsOnline(!isOnline);
+    if (isOnline) {
+      // Going offline - reset to idle state
+      setRideStatus('idle');
+    }
+  };
+
+  const handleAcceptRide = () => {
+    setRideStatus('picking_up');
+  };
+
+  const handleStartRide = () => {
+    setRideStatus('in_ride');
+  };
+
+  const handleEndRide = () => {
+    setRideStatus('idle');
+  };
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -75,6 +96,12 @@ const Dashboard = () => {
               batteryLevel={batteryLevel}
               isCharging={isCharging}
               onToggleCharging={() => setIsCharging(!isCharging)}
+              rideStatus={rideStatus}
+              isOnline={isOnline}
+              onToggleOnlineStatus={handleToggleOnlineStatus}
+              onAcceptRide={handleAcceptRide}
+              onStartRide={handleStartRide}
+              onEndRide={handleEndRide}
             />
           </div>
 
@@ -87,11 +114,6 @@ const Dashboard = () => {
           <div className="lg:col-span-3">
             <RiderDetails />
           </div>
-        </div>
-
-        {/* Bottom Row - Notifications */}
-        <div className="grid grid-cols-1">
-          <CabNotifications />
         </div>
       </div>
     </div>

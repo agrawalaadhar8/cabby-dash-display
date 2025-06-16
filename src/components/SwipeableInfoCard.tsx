@@ -1,17 +1,57 @@
 
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery, Wifi, WifiOff } from 'lucide-react';
 import BatterySwapAnimation from './BatterySwapAnimation';
 
 interface SwipeableInfoCardProps {
   batteryLevel: number;
   isCharging: boolean;
   onToggleCharging: () => void;
+  rideStatus: 'idle' | 'picking_up' | 'in_ride' | 'dropping_off';
+  isOnline: boolean;
+  onToggleOnlineStatus: () => void;
+  onAcceptRide: () => void;
+  onStartRide: () => void;
+  onEndRide: () => void;
 }
 
-const SwipeableInfoCard = ({ batteryLevel, isCharging, onToggleCharging }: SwipeableInfoCardProps) => {
+const SwipeableInfoCard = ({ 
+  batteryLevel, 
+  isCharging, 
+  onToggleCharging,
+  rideStatus,
+  isOnline,
+  onToggleOnlineStatus,
+  onAcceptRide,
+  onStartRide,
+  onEndRide
+}: SwipeableInfoCardProps) => {
   const [currentCard, setCurrentCard] = useState(0);
   const [showBatterySwap, setShowBatterySwap] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const getStatusColor = () => {
+    if (!isOnline) return 'bg-gray-600';
+    switch (rideStatus) {
+      case 'idle': return 'bg-green-600';
+      case 'picking_up': return 'bg-yellow-500';
+      case 'in_ride': return 'bg-green-500';
+      case 'dropping_off': return 'bg-blue-500';
+      default: return 'bg-gray-600';
+    }
+  };
+
+  const getStatusText = () => {
+    if (!isOnline) return 'Offline';
+    switch (rideStatus) {
+      case 'idle': return 'Available';
+      case 'picking_up': return 'En Route to Pickup';
+      case 'in_ride': return 'Passenger On Board';
+      case 'dropping_off': return 'Approaching Destination';
+      default: return 'Unknown';
+    }
+  };
 
   const cards = [
     {
@@ -89,7 +129,7 @@ const SwipeableInfoCard = ({ batteryLevel, isCharging, onToggleCharging }: Swipe
           <div className="space-y-2">
             <button
               onClick={onToggleCharging}
-              className={`w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
+              className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 text-base ${
                 isCharging 
                   ? 'bg-green-600 hover:bg-green-700 text-white' 
                   : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
@@ -100,7 +140,7 @@ const SwipeableInfoCard = ({ batteryLevel, isCharging, onToggleCharging }: Swipe
             
             <button
               onClick={() => setShowBatterySwap(true)}
-              className="w-full py-2 px-4 rounded-lg font-medium bg-sky-600 hover:bg-sky-700 text-white transition-all duration-200"
+              className="w-full py-3 px-4 rounded-lg font-medium bg-sky-600 hover:bg-sky-700 text-white transition-all duration-200 text-base"
             >
               Battery Swap
             </button>
@@ -145,8 +185,116 @@ const SwipeableInfoCard = ({ batteryLevel, isCharging, onToggleCharging }: Swipe
           </div>
         </div>
       )
+    },
+    {
+      title: 'CAB STATUS',
+      content: (
+        <div className="space-y-4">
+          {/* Current Status */}
+          <div className={`${getStatusColor()} rounded-lg p-4 text-center`}>
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              {isOnline ? <Wifi className="h-5 w-5" /> : <WifiOff className="h-5 w-5" />}
+              <div className="text-lg font-bold text-white">{getStatusText()}</div>
+            </div>
+            <div className="text-sm text-gray-200">
+              {!isOnline && 'Driver offline'}
+              {isOnline && rideStatus === 'idle' && 'Ready for new rides'}
+              {rideStatus === 'picking_up' && 'ETA: 5 minutes'}
+              {rideStatus === 'in_ride' && 'Destination: Downtown'}
+              {rideStatus === 'dropping_off' && 'ETA: 2 minutes'}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            {rideStatus === 'picking_up' && isOnline && (
+              <button
+                onClick={onStartRide}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors text-base"
+              >
+                Start Ride
+              </button>
+            )}
+            {rideStatus === 'in_ride' && isOnline && (
+              <button
+                onClick={onEndRide}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors text-base"
+              >
+                Complete Ride
+              </button>
+            )}
+            {rideStatus === 'idle' && (
+              <>
+                <button 
+                  onClick={onToggleOnlineStatus}
+                  className={`w-full py-3 px-4 rounded-lg font-medium transition-colors text-base ${
+                    isOnline 
+                      ? 'bg-red-600 hover:bg-red-700 text-white' 
+                      : 'bg-green-600 hover:bg-green-700 text-white'
+                  }`}
+                >
+                  {isOnline ? 'Go Offline' : 'Go Online'}
+                </button>
+                {isOnline && (
+                  <button
+                    onClick={onAcceptRide}
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-4 rounded-lg font-medium transition-colors text-base"
+                  >
+                    Accept New Ride
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="bg-gray-800 rounded p-2 text-center">
+              <div className="text-cyan-400 font-bold">8</div>
+              <div className="text-gray-400">Today's Rides</div>
+            </div>
+            <div className="bg-gray-800 rounded p-2 text-center">
+              <div className="text-green-400 font-bold">$156</div>
+              <div className="text-gray-400">Today's Earnings</div>
+            </div>
+          </div>
+        </div>
+      )
     }
   ];
+
+  // Auto-swipe functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCard((prev) => (prev + 1) % cards.length);
+    }, 60000); // 60 seconds
+
+    return () => clearInterval(interval);
+  }, [cards.length]);
+
+  // Touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextCard();
+    }
+    if (isRightSwipe) {
+      prevCard();
+    }
+  };
 
   const nextCard = () => {
     setCurrentCard((prev) => (prev + 1) % cards.length);
@@ -165,26 +313,31 @@ const SwipeableInfoCard = ({ batteryLevel, isCharging, onToggleCharging }: Swipe
   }
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 relative">
+    <div 
+      className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 relative select-none"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Navigation arrows */}
       <button
         onClick={prevCard}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 p-1 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors touch-manipulation"
         disabled={cards.length <= 1}
       >
-        <ChevronLeft className="h-4 w-4 text-cyan-400" />
+        <ChevronLeft className="h-5 w-5 text-cyan-400" />
       </button>
       
       <button
         onClick={nextCard}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 p-1 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors touch-manipulation"
         disabled={cards.length <= 1}
       >
-        <ChevronRight className="h-4 w-4 text-cyan-400" />
+        <ChevronRight className="h-5 w-5 text-cyan-400" />
       </button>
 
       {/* Card content */}
-      <div className="px-6">
+      <div className="px-8">
         <h3 className="text-lg font-semibold text-cyan-400 mb-3 tracking-wide text-center">
           {cards[currentCard].title}
         </h3>
@@ -199,7 +352,7 @@ const SwipeableInfoCard = ({ batteryLevel, isCharging, onToggleCharging }: Swipe
           <button
             key={index}
             onClick={() => setCurrentCard(index)}
-            className={`w-2 h-2 rounded-full transition-colors ${
+            className={`w-3 h-3 rounded-full transition-colors touch-manipulation ${
               index === currentCard ? 'bg-cyan-400' : 'bg-gray-600'
             }`}
           />

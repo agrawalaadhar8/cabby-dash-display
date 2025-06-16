@@ -10,8 +10,13 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
   
-  // Calculate needle angle (270 degrees total, starting from -135 degrees)
-  const needleAngle = -135 + (percentage * 270) / 100;
+  // Calculate needle angle (240 degrees total arc, starting from -120 degrees)
+  const startAngle = -120;
+  const totalArc = 240;
+  const needleAngle = startAngle + (percentage * totalArc) / 100;
+  
+  // Speed markers at regular intervals
+  const speedMarkers = [0, 20, 40, 60, 80, 100, 120];
   
   return (
     <div className="relative w-96 h-96 flex items-center justify-center">
@@ -23,27 +28,22 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
         {/* Background Circle */}
         <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
           {/* Background arc */}
-          <circle
-            cx="100"
-            cy="100"
-            r="85"
+          <path
+            d="M 30 150 A 70 70 0 1 1 170 150"
             fill="none"
             stroke="rgba(55, 65, 81, 0.3)"
             strokeWidth="3"
-            strokeDasharray="534.07"
             strokeLinecap="round"
           />
           
           {/* Progress arc with glow effect */}
-          <circle
-            cx="100"
-            cy="100"
-            r="85"
+          <path
+            d="M 30 150 A 70 70 0 1 1 170 150"
             fill="none"
             stroke="url(#speedGradient)"
             strokeWidth="4"
-            strokeDasharray="534.07"
-            strokeDashoffset={534.07 - (534.07 * percentage) / 100}
+            strokeDasharray="439.82"
+            strokeDashoffset={439.82 - (439.82 * percentage) / 100}
             strokeLinecap="round"
             className="transition-all duration-1000 ease-out"
             style={{
@@ -51,13 +51,38 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             }}
           />
           
+          {/* Speed indicator bars */}
+          {speedMarkers.map((marker, index) => {
+            const angle = startAngle + (index * totalArc) / (speedMarkers.length - 1);
+            const radian = (angle * Math.PI) / 180;
+            const innerRadius = 65;
+            const outerRadius = 75;
+            const x1 = 100 + innerRadius * Math.cos(radian);
+            const y1 = 100 + innerRadius * Math.sin(radian);
+            const x2 = 100 + outerRadius * Math.cos(radian);
+            const y2 = 100 + outerRadius * Math.sin(radian);
+            
+            return (
+              <line
+                key={marker}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={marker % 40 === 0 ? "#06b6d4" : "#6b7280"}
+                strokeWidth={marker % 40 === 0 ? "2" : "1"}
+                strokeLinecap="round"
+              />
+            );
+          })}
+          
           {/* Speed Needle */}
           <g className="transition-transform duration-500 ease-out" style={{ transformOrigin: '100px 100px', transform: `rotate(${needleAngle}deg)` }}>
             <line
               x1="100"
               y1="100"
               x2="100"
-              y2="25"
+              y2="35"
               stroke="#ef4444"
               strokeWidth="3"
               strokeLinecap="round"
@@ -110,19 +135,19 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
           </div>
         </div>
 
-        {/* Speed Markers - Fixed positioning */}
+        {/* Speed Markers - Text labels */}
         <div className="absolute inset-0">
-          {[0, 30, 60, 90, 120].map((marker, index) => {
-            const angle = (index * 270) / 4 - 135; // Distribute across 270 degrees
+          {speedMarkers.map((marker, index) => {
+            const angle = startAngle + (index * totalArc) / (speedMarkers.length - 1);
             const radian = (angle * Math.PI) / 180;
-            const radius = 90; // Distance from center
-            const x = 50 + (radius * Math.cos(radian)) / 2; // Adjusted for percentage positioning
-            const y = 50 + (radius * Math.sin(radian)) / 2; // Adjusted for percentage positioning
+            const radius = 85;
+            const x = 50 + (radius * Math.cos(radian)) / 2;
+            const y = 50 + (radius * Math.sin(radian)) / 2;
             
             return (
               <div
                 key={marker}
-                className="absolute text-xs text-gray-400 font-mono"
+                className="absolute text-xs text-gray-400 font-mono font-semibold"
                 style={{
                   left: `${x}%`,
                   top: `${y}%`,

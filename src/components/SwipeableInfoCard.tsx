@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery, Wifi, WifiOff } from 'lucide-react';
 import BatterySwapAnimation from './BatterySwapAnimation';
@@ -306,7 +305,7 @@ const SwipeableInfoCard = ({
 
   if (showBatterySwap) {
     return (
-      <div className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
+      <div className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 h-full">
         <BatterySwapAnimation onClose={() => setShowBatterySwap(false)} />
       </div>
     );
@@ -314,7 +313,7 @@ const SwipeableInfoCard = ({
 
   return (
     <div 
-      className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 relative select-none"
+      className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 relative select-none h-full"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -337,26 +336,26 @@ const SwipeableInfoCard = ({
       </button>
 
       {/* Card content */}
-      <div className="px-8">
+      <div className="px-8 h-full flex flex-col">
         <h3 className="text-lg font-semibold text-cyan-400 mb-3 tracking-wide text-center">
           {cards[currentCard].title}
         </h3>
-        <div className="min-h-[200px]">
+        <div className="flex-1 overflow-y-auto">
           {cards[currentCard].content}
         </div>
-      </div>
-
-      {/* Dots indicator */}
-      <div className="flex justify-center space-x-2 mt-4">
-        {cards.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentCard(index)}
-            className={`w-3 h-3 rounded-full transition-colors touch-manipulation ${
-              index === currentCard ? 'bg-cyan-400' : 'bg-gray-600'
-            }`}
-          />
-        ))}
+        
+        {/* Dots indicator */}
+        <div className="flex justify-center space-x-2 mt-4">
+          {cards.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentCard(index)}
+              className={`w-3 h-3 rounded-full transition-colors touch-manipulation ${
+                index === currentCard ? 'bg-cyan-400' : 'bg-gray-600'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

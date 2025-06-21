@@ -65,7 +65,7 @@ const Dashboard = () => {
       <div 
         className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"
         style={{
-          backgroundImage: `url('/background.jpg')`, // You can place your background image in the public folder
+          backgroundImage: `url('/background.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'overlay'
@@ -80,23 +80,9 @@ const Dashboard = () => {
         }}></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto p-4">
-        {/* Top Status Bar */}
-        <div className="flex justify-between items-center mb-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
-          <div className="flex items-center space-x-6">
-            <h1 className="text-2xl font-bold text-cyan-400 tracking-wider">ECO MODE</h1>
-            <div className="text-sm text-gray-400">
-              Status: <span className="text-green-400 font-semibold">ACTIVE</span>
-            </div>
-            <div className="text-sm text-gray-400">
-              Range: <span className="text-cyan-400 font-mono">{Math.round(batteryLevel * 3.2)} km</span>
-            </div>
-          </div>
-          <ClockDisplay />
-        </div>
-
+      <div className="relative z-10 max-w-7xl mx-auto p-4 h-screen flex flex-col">
         {/* Main Dashboard Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
           
           {/* Left Side - Swipeable Info Card */}
           <div className="lg:col-span-3">
@@ -118,10 +104,24 @@ const Dashboard = () => {
             <SpeedGauge speed={speed} batteryLevel={batteryLevel} />
           </div>
 
-          {/* Right Side - Rider Details */}
+          {/* Right Side - Rider Details (now swipeable) */}
           <div className="lg:col-span-3">
-            <RiderDetails />
+            <SwipeableRiderDetails />
           </div>
+        </div>
+
+        {/* Bottom Status Bar (moved from top) */}
+        <div className="flex justify-between items-center mt-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
+          <div className="flex items-center space-x-6">
+            <h1 className="text-2xl font-bold text-cyan-400 tracking-wider">ECO MODE</h1>
+            <div className="text-sm text-gray-400">
+              Status: <span className="text-green-400 font-semibold">ACTIVE</span>
+            </div>
+            <div className="text-sm text-gray-400">
+              Range: <span className="text-cyan-400 font-mono">{Math.round(batteryLevel * 3.2)} km</span>
+            </div>
+          </div>
+          <ClockDisplay />
         </div>
       </div>
     </div>

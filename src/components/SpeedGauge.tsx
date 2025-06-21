@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface SpeedGaugeProps {
@@ -85,7 +84,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {/* Main Speed Display */}
           <div className="text-center mb-2">
-            <div className="text-6xl font-mono font-bold text-white leading-none tracking-wider" style={{
+            <div className="text-5xl font-mono font-bold text-white leading-none tracking-wider" style={{
               fontFamily: 'Orbitron, monospace',
               textShadow: '0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.4)',
               filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.6))'
@@ -136,15 +135,32 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
 
       {/* Mode Indicators */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-        <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2">
-          <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
-            {speed > 0 ? 'DRIVE' : 'PARK'}
+        <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
+          {speed > 0 ? 'DRIVE' : 'PARK'}
+        </div>
+      </div>
+
+      {/* Bottom Icon Space */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="w-16 h-16 bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-full flex items-center justify-center">
+          <img 
+            src="/speedometer-icon.png" 
+            alt="Speedometer Icon" 
+            className="w-10 h-10 object-contain"
+            onError={(e) => {
+              // Fallback to a simple icon if image doesn't exist
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling!.style.display = 'block';
+            }}
+          />
+          <div className="w-10 h-10 bg-cyan-400/20 rounded-full flex items-center justify-center hidden">
+            <div className="w-6 h-6 bg-cyan-400 rounded-full"></div>
           </div>
         </div>
       </div>
 
       {/* Bottom Status */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
         <div className="flex space-x-4 text-xs text-gray-400 font-mono">
           <span className="flex items-center">
             <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>

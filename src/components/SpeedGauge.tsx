@@ -10,12 +10,9 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
   
-  // Calculate needle angle (180 degrees total arc, starting from 180 degrees to 0 degrees)
-  // 180 degrees = left horizontal, 0 degrees = right horizontal
-  const startAngle = 180;
-  const endAngle = 0;
-  const totalArc = 180;
-  const needleAngle = startAngle - (percentage * totalArc) / 100;
+  // Calculate needle angle - needle should start at 0 degrees (right) and go to 180 degrees (left)
+  // For the transform, 0 degrees points right, 90 degrees points down, 180 degrees points left
+  const needleAngle = percentage * 180 / 100;
   
   // Speed markers at regular intervals
   const speedMarkers = [0, 20, 40, 60, 80, 100, 120];
@@ -55,7 +52,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
           
           {/* Speed indicator bars */}
           {speedMarkers.map((marker, index) => {
-            const angle = startAngle - (index * totalArc) / (speedMarkers.length - 1);
+            const angle = index * 180 / (speedMarkers.length - 1);
             const radian = (angle * Math.PI) / 180;
             const innerRadius = 65;
             const outerRadius = 75;
@@ -83,8 +80,8 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             <line
               x1="100"
               y1="100"
-              x2="100"
-              y2="35"
+              x2="165"
+              y2="100"
               stroke="#ef4444"
               strokeWidth="3"
               strokeLinecap="round"
@@ -140,7 +137,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
         {/* Speed Markers - Text labels positioned above the arc */}
         <div className="absolute inset-0">
           {speedMarkers.map((marker, index) => {
-            const angle = startAngle - (index * totalArc) / (speedMarkers.length - 1);
+            const angle = index * 180 / (speedMarkers.length - 1);
             const radian = (angle * Math.PI) / 180;
             const radius = 90;
             const x = 50 + (radius * Math.cos(radian)) / 2;

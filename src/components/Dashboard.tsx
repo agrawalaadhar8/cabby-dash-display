@@ -61,8 +61,16 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Background with subtle gradient and grid pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+      {/* Background with optional image and gradients */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"
+        style={{
+          backgroundImage: `url('/background.jpg')`, // You can place your background image in the public folder
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundBlendMode: 'overlay'
+        }}
+      >
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: `
             linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),

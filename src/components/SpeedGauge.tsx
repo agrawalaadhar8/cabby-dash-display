@@ -10,10 +10,6 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   const maxSpeed = 120;
   const percentage = Math.min((speed / maxSpeed) * 100, 100);
   
-  // Calculate needle angle - needle should start at 0 degrees (right) and go to 180 degrees (left)
-  // For the transform, 0 degrees points right, 90 degrees points down, 180 degrees points left
-  const needleAngle = percentage * 180 / 100;
-  
   // Speed markers at regular intervals
   const speedMarkers = [0, 20, 40, 60, 80, 100, 120];
   
@@ -75,32 +71,6 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             );
           })}
           
-          {/* Speed Needle */}
-          <g className="transition-transform duration-500 ease-out" style={{ transformOrigin: '100px 100px', transform: `rotate(${needleAngle}deg)` }}>
-            <line
-              x1="100"
-              y1="100"
-              x2="165"
-              y2="100"
-              stroke="#ef4444"
-              strokeWidth="3"
-              strokeLinecap="round"
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.8))'
-              }}
-            />
-            {/* Needle center dot */}
-            <circle
-              cx="100"
-              cy="100"
-              r="6"
-              fill="#ef4444"
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.8))'
-              }}
-            />
-          </g>
-          
           {/* Gradient Definition */}
           <defs>
             <linearGradient id="speedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -115,20 +85,34 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {/* Main Speed Display */}
           <div className="text-center mb-2">
-            <div className="text-7xl font-mono font-bold text-white leading-none tracking-wider">
-              {Math.round(speed)}
+            <div className="text-7xl font-mono font-bold text-cyan-400 leading-none tracking-[0.2em] uppercase" 
+                 style={{ 
+                   fontFamily: 'Orbitron, monospace', 
+                   textShadow: '0 0 20px rgba(6, 182, 212, 0.8), 0 0 40px rgba(6, 182, 212, 0.4)',
+                   letterSpacing: '0.15em'
+                 }}>
+              {Math.round(speed).toString().padStart(3, '0')}
             </div>
-            <div className="text-xl text-cyan-400 font-semibold tracking-widest mt-1">
+            <div className="text-xl text-cyan-400 font-semibold tracking-widest mt-1" 
+                 style={{ 
+                   fontFamily: 'Orbitron, monospace',
+                   textShadow: '0 0 10px rgba(6, 182, 212, 0.6)'
+                 }}>
               km/h
             </div>
           </div>
 
           {/* Battery Percentage */}
           <div className="text-center mt-4">
-            <div className="text-2xl font-mono font-bold text-green-400">
+            <div className="text-2xl font-mono font-bold text-green-400" 
+                 style={{ 
+                   fontFamily: 'Orbitron, monospace',
+                   textShadow: '0 0 15px rgba(34, 197, 94, 0.8)'
+                 }}>
               {Math.round(batteryLevel)}%
             </div>
-            <div className="text-xs text-gray-400 uppercase tracking-wider">
+            <div className="text-xs text-gray-400 uppercase tracking-wider" 
+                 style={{ fontFamily: 'Orbitron, monospace' }}>
               {batteryLevel > 90 ? 'Fully Charged' : batteryLevel > 20 ? 'Good' : 'Low Battery'}
             </div>
           </div>
@@ -150,7 +134,8 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
                 style={{
                   left: `${x}%`,
                   top: `${y}%`,
-                  transform: 'translate(-50%, -50%)'
+                  transform: 'translate(-50%, -50%)',
+                  fontFamily: 'Orbitron, monospace'
                 }}
               >
                 {marker}
@@ -163,7 +148,11 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
       {/* Mode Indicators */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
         <div className="bg-black/60 backdrop-blur-sm border border-cyan-500/30 rounded-lg px-4 py-2">
-          <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
+          <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider" 
+               style={{ 
+                 fontFamily: 'Orbitron, monospace',
+                 textShadow: '0 0 10px rgba(6, 182, 212, 0.6)'
+               }}>
             {speed > 0 ? 'DRIVE' : 'PARK'}
           </div>
         </div>
@@ -171,7 +160,8 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
 
       {/* Bottom Status */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-        <div className="flex space-x-4 text-xs text-gray-400 font-mono">
+        <div className="flex space-x-4 text-xs text-gray-400 font-mono" 
+             style={{ fontFamily: 'Orbitron, monospace' }}>
           <span className="flex items-center">
             <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
             156 kW

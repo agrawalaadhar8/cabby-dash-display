@@ -29,9 +29,9 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
       <div className="relative w-80 h-80">
         {/* Background Circle */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
-          {/* Background arc - semicircle from left horizontal to right horizontal */}
+          {/* Background arc - semicircle from left horizontal to right horizontal (top half) */}
           <path
-            d="M 30 100 A 70 70 0 0 0 170 100"
+            d="M 30 100 A 70 70 0 0 1 170 100"
             fill="none"
             stroke="rgba(55, 65, 81, 0.3)"
             strokeWidth="3"
@@ -40,7 +40,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
           
           {/* Progress arc with glow effect */}
           <path
-            d="M 30 100 A 70 70 0 0 0 170 100"
+            d="M 30 100 A 70 70 0 0 1 170 100"
             fill="none"
             stroke="url(#speedGradient)"
             strokeWidth="4"
@@ -60,9 +60,9 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             const innerRadius = 65;
             const outerRadius = 75;
             const x1 = 100 + innerRadius * Math.cos(radian);
-            const y1 = 100 + innerRadius * Math.sin(radian);
+            const y1 = 100 - innerRadius * Math.sin(radian);
             const x2 = 100 + outerRadius * Math.cos(radian);
-            const y2 = 100 + outerRadius * Math.sin(radian);
+            const y2 = 100 - outerRadius * Math.sin(radian);
             
             return (
               <line
@@ -144,7 +144,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             const radian = (angle * Math.PI) / 180;
             const radius = 90;
             const x = 50 + (radius * Math.cos(radian)) / 2;
-            const y = 50 + (radius * Math.sin(radian)) / 2;
+            const y = 50 - (radius * Math.sin(radian)) / 2;
             
             return (
               <div

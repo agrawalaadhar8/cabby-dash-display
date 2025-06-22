@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
 import ClockDisplay from './ClockDisplay';
 import SwipeableInfoCard from './SwipeableInfoCard';
 import RiderDetails from './RiderDetails';
+import SwipeableRiderDetails from './SwipeableRiderDetails';
 
 const Dashboard = () => {
   const [speed, setSpeed] = useState(0);

@@ -150,7 +150,10 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             onError={(e) => {
               // Fallback to a simple icon if image doesn't exist
               e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling!.style.display = 'block';
+              const fallbackElement = e.currentTarget.nextElementSibling as HTMLElement;
+              if (fallbackElement) {
+                fallbackElement.style.display = 'block';
+              }
             }}
           />
           <div className="w-10 h-10 bg-cyan-400/20 rounded-full flex items-center justify-center hidden">

@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
 import ClockDisplay from './ClockDisplay';
 import SwipeableInfoCard from './SwipeableInfoCard';
 import RiderDetails from './RiderDetails';
 import SwipeableRiderDetails from './SwipeableRiderDetails';
+import CarIndicators from './CarIndicators';
 
 const Dashboard = () => {
   const [speed, setSpeed] = useState(0);
@@ -12,6 +12,23 @@ const Dashboard = () => {
   const [isCharging, setIsCharging] = useState(false);
   const [rideStatus, setRideStatus] = useState<'idle' | 'picking_up' | 'in_ride' | 'dropping_off'>('idle');
   const [isOnline, setIsOnline] = useState(false);
+  const [carIndicators, setCarIndicators] = useState({
+    doorStatus: {
+      frontLeft: false,
+      frontRight: false,
+      rearLeft: false,
+      rearRight: false
+    },
+    seatbeltStatus: {
+      driver: true,
+      passenger: false,
+      rearLeft: false,
+      rearRight: false
+    },
+    temperature: 22,
+    parkingBrake: true,
+    acStatus: true
+  });
 
   // Simulate speed changes for demo
   useEffect(() => {
@@ -60,6 +77,10 @@ const Dashboard = () => {
     setRideStatus('idle');
   };
 
+  const handleCarIndicatorsChange = (indicators: any) => {
+    setCarIndicators(indicators);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       {/* Background with optional image and gradients */}
@@ -82,7 +103,7 @@ const Dashboard = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-4 h-screen flex flex-col">
-        {/* Main Dashboard Layout - Fixed height container */}
+        {/* Main Dashboard Layout */}
         <div className="flex-1 flex flex-col justify-center">
           <div className="flex items-center justify-center gap-6 h-96">
             {/* Left Side - Swipeable Info Card */}
@@ -97,12 +118,14 @@ const Dashboard = () => {
                 onAcceptRide={handleAcceptRide}
                 onStartRide={handleStartRide}
                 onEndRide={handleEndRide}
+                onCarIndicatorsChange={handleCarIndicatorsChange}
               />
             </div>
 
-            {/* Center - Main Speed Gauge */}
-            <div className="flex items-center justify-center h-full">
+            {/* Center - Main Speed Gauge with Car Indicators */}
+            <div className="flex items-center justify-center h-full relative">
               <SpeedGauge speed={speed} batteryLevel={batteryLevel} />
+              <CarIndicators carIndicators={carIndicators} />
             </div>
 
             {/* Right Side - Rider Details (swipeable) */}
@@ -112,7 +135,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Bottom Status Bar - positioned right below the main content */}
+        {/* Bottom Status Bar */}
         <div className="flex justify-between items-center mt-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
           <div className="flex items-center space-x-6">
             <div className="text-sm text-gray-400">

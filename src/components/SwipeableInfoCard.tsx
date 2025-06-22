@@ -13,6 +13,7 @@ interface SwipeableInfoCardProps {
   onAcceptRide: () => void;
   onStartRide: () => void;
   onEndRide: () => void;
+  onCarIndicatorsChange?: (indicators: any) => void;
 }
 
 const SwipeableInfoCard = ({ 
@@ -24,7 +25,8 @@ const SwipeableInfoCard = ({
   onToggleOnlineStatus,
   onAcceptRide,
   onStartRide,
-  onEndRide
+  onEndRide,
+  onCarIndicatorsChange
 }: SwipeableInfoCardProps) => {
   const [currentCard, setCurrentCard] = useState(0);
   const [showBatterySwap, setShowBatterySwap] = useState(false);
@@ -47,6 +49,19 @@ const SwipeableInfoCard = ({
   const [temperature, setTemperature] = useState(22);
   const [parkingBrake, setParkingBrake] = useState(true);
   const [acStatus, setAcStatus] = useState(true);
+
+  // Notify parent component of car indicator changes
+  useEffect(() => {
+    if (onCarIndicatorsChange) {
+      onCarIndicatorsChange({
+        doorStatus,
+        seatbeltStatus,
+        temperature,
+        parkingBrake,
+        acStatus
+      });
+    }
+  }, [doorStatus, seatbeltStatus, temperature, parkingBrake, acStatus, onCarIndicatorsChange]);
 
   const getStatusColor = () => {
     if (!isOnline) return 'bg-gray-600';
@@ -189,11 +204,17 @@ const SwipeableInfoCard = ({
           <div className="bg-gray-800/50 rounded-lg p-4">
             <h4 className="text-sm font-semibold text-cyan-400 mb-3">Seatbelt Status</h4>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className={`p-2 rounded text-center ${seatbeltStatus.driver ? 'bg-green-600' : 'bg-red-600'}`}>
+              <div 
+                className={`p-2 rounded text-center cursor-pointer transition-colors ${seatbeltStatus.driver ? 'bg-green-600' : 'bg-red-600'}`}
+                onClick={() => setSeatbeltStatus(prev => ({ ...prev, driver: !prev.driver }))}
+              >
                 <div>Driver</div>
                 <div className="text-lg">🔒</div>
               </div>
-              <div className={`p-2 rounded text-center ${seatbeltStatus.passenger ? 'bg-green-600' : 'bg-red-600'}`}>
+              <div 
+                className={`p-2 rounded text-center cursor-pointer transition-colors ${seatbeltStatus.passenger ? 'bg-green-600' : 'bg-red-600'}`}
+                onClick={() => setSeatbeltStatus(prev => ({ ...prev, passenger: !prev.passenger }))}
+              >
                 <div>Passenger</div>
                 <div className="text-lg">🔒</div>
               </div>

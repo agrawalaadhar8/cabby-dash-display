@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery, Wifi, WifiOff } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery, Wifi, WifiOff, DoorClosed, DoorOpen, Thermometer } from 'lucide-react';
 import BatterySwapAnimation from './BatterySwapAnimation';
+import { Switch } from './ui/switch';
 
 interface SwipeableInfoCardProps {
   batteryLevel: number;
@@ -29,6 +30,23 @@ const SwipeableInfoCard = ({
   const [showBatterySwap, setShowBatterySwap] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+
+  // Car indicators state
+  const [doorStatus, setDoorStatus] = useState({
+    frontLeft: false,
+    frontRight: false,
+    rearLeft: false,
+    rearRight: false
+  });
+  const [seatbeltStatus, setSeatbeltStatus] = useState({
+    driver: true,
+    passenger: false,
+    rearLeft: false,
+    rearRight: false
+  });
+  const [temperature, setTemperature] = useState(22);
+  const [parkingBrake, setParkingBrake] = useState(true);
+  const [acStatus, setAcStatus] = useState(true);
 
   const getStatusColor = () => {
     if (!isOnline) return 'bg-gray-600';
@@ -72,6 +90,114 @@ const SwipeableInfoCard = ({
           <div className="flex justify-between items-center">
             <span className="text-gray-400">Gear</span>
             <span className="text-cyan-400 font-mono">P</span>
+          </div>
+          
+          {/* Image Container */}
+          <div className="mt-4 bg-gray-800/50 rounded-lg p-4">
+            <div className="w-full h-32 bg-gray-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+              <span className="text-gray-400 text-sm">Vehicle Image</span>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'CONTROLS',
+      content: (
+        <div className="space-y-4">
+          {/* Door Controls */}
+          <div className="bg-gray-800/50 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-cyan-400 mb-3">Door Controls</h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-300">Front Left</span>
+                <Switch 
+                  checked={doorStatus.frontLeft}
+                  onCheckedChange={(checked) => setDoorStatus(prev => ({ ...prev, frontLeft: checked }))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-300">Front Right</span>
+                <Switch 
+                  checked={doorStatus.frontRight}
+                  onCheckedChange={(checked) => setDoorStatus(prev => ({ ...prev, frontRight: checked }))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-300">Rear Left</span>
+                <Switch 
+                  checked={doorStatus.rearLeft}
+                  onCheckedChange={(checked) => setDoorStatus(prev => ({ ...prev, rearLeft: checked }))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-300">Rear Right</span>
+                <Switch 
+                  checked={doorStatus.rearRight}
+                  onCheckedChange={(checked) => setDoorStatus(prev => ({ ...prev, rearRight: checked }))}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Climate & Systems */}
+          <div className="bg-gray-800/50 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-cyan-400 mb-3">Climate & Systems</h4>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs">❄️</span>
+                  <span className="text-xs text-gray-300">Air Conditioning</span>
+                </div>
+                <Switch 
+                  checked={acStatus}
+                  onCheckedChange={setAcStatus}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs">🅿️</span>
+                  <span className="text-xs text-gray-300">Parking Brake</span>
+                </div>
+                <Switch 
+                  checked={parkingBrake}
+                  onCheckedChange={setParkingBrake}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-300">Temperature</span>
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={() => setTemperature(prev => Math.max(16, prev - 1))}
+                    className="w-6 h-6 bg-gray-700 rounded text-xs hover:bg-gray-600"
+                  >
+                    -
+                  </button>
+                  <span className="text-white font-mono text-xs w-8 text-center">{temperature}°</span>
+                  <button 
+                    onClick={() => setTemperature(prev => Math.min(30, prev + 1))}
+                    className="w-6 h-6 bg-gray-700 rounded text-xs hover:bg-gray-600"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Seatbelt Status */}
+          <div className="bg-gray-800/50 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-cyan-400 mb-3">Seatbelt Status</h4>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className={`p-2 rounded text-center ${seatbeltStatus.driver ? 'bg-green-600' : 'bg-red-600'}`}>
+                <div>Driver</div>
+                <div className="text-lg">🔒</div>
+              </div>
+              <div className={`p-2 rounded text-center ${seatbeltStatus.passenger ? 'bg-green-600' : 'bg-red-600'}`}>
+                <div>Passenger</div>
+                <div className="text-lg">🔒</div>
+              </div>
+            </div>
           </div>
         </div>
       )
@@ -262,7 +388,7 @@ const SwipeableInfoCard = ({
     }
   ];
 
-  // Auto-swipe functionality
+  // Auto-swipe functionality  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentCard((prev) => (prev + 1) % cards.length);

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, User, MapPin, Star, Phone, MessageCircle } from 'lucide-react';
 
@@ -46,6 +45,13 @@ const SwipeableRiderDetails = () => {
               <MessageCircle className="h-4 w-4" />
               <span>Message</span>
             </button>
+          </div>
+
+          {/* Image Container */}
+          <div className="bg-gray-800/50 rounded-lg p-4">
+            <div className="w-full h-32 bg-gray-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+              <span className="text-gray-400 text-sm">Rider Image</span>
+            </div>
           </div>
         </div>
       )

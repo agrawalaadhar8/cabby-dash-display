@@ -1,6 +1,5 @@
 
 import React from 'react';
-import CarIndicators from './CarIndicators';
 
 interface SpeedGaugeProps {
   speed: number;
@@ -16,9 +15,6 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   
   return (
     <div className="relative w-96 h-96 flex items-center justify-center">
-      {/* Car Indicators Overlay */}
-      <CarIndicators />
-      
       {/* Outer Glow Ring */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 via-transparent to-cyan-500/20 blur-sm"></div>
       

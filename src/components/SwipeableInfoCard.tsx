@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery, Wifi, WifiOff, DoorClosed, DoorOpen, Thermometer } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Gauge, MapPin, Clock, Battery, Wifi, WifiOff, DoorClosed, DoorOpen, Thermometer, Car } from 'lucide-react';
 import BatterySwapAnimation from './BatterySwapAnimation';
 import { Switch } from './ui/switch';
 
@@ -106,12 +106,15 @@ const SwipeableInfoCard = ({
             <span className="text-gray-400">Gear</span>
             <span className="text-cyan-400 font-mono">P</span>
           </div>
-          
-          {/* Image Container */}
-          <div className="mt-4 bg-gray-800/50 rounded-lg p-4">
-            <div className="w-full h-32 bg-gray-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
-              <span className="text-gray-400 text-sm">Vehicle Image</span>
-            </div>
+        </div>
+      )
+    },
+    {
+      title: '',
+      content: (
+        <div className="flex items-center justify-center h-full">
+          <div className="w-full h-64 bg-gray-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+            <span className="text-gray-400 text-sm">Vehicle Image</span>
           </div>
         </div>
       )
@@ -171,7 +174,7 @@ const SwipeableInfoCard = ({
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs">🅿️</span>
+                  <Car className="h-3 w-3 text-red-400" />
                   <span className="text-xs text-gray-300">Parking Brake</span>
                 </div>
                 <Switch 

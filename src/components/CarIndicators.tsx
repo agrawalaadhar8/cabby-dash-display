@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Thermometer, DoorClosed, DoorOpen } from 'lucide-react';
+import { Thermometer, DoorClosed, DoorOpen, Car } from 'lucide-react';
 
 interface CarIndicatorsProps {
   carIndicators: {
@@ -59,8 +58,8 @@ const CarIndicators = ({ carIndicators }: CarIndicatorsProps) => {
         <div className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
           carIndicators.parkingBrake ? 'bg-red-500/20 text-red-400' : 'bg-gray-600/20 text-gray-400'
         }`}>
-          <span>🅿️</span>
-          <span>BRAKE</span>
+          <Car className="h-3 w-3" />
+          <span>!</span>
         </div>
       </div>
 

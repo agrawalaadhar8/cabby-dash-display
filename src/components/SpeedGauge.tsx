@@ -1,4 +1,6 @@
+
 import React from 'react';
+import CarIndicators from './CarIndicators';
 
 interface SpeedGaugeProps {
   speed: number;
@@ -14,6 +16,9 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
   
   return (
     <div className="relative w-96 h-96 flex items-center justify-center">
+      {/* Car Indicators Overlay */}
+      <CarIndicators />
+      
       {/* Outer Glow Ring */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 via-transparent to-cyan-500/20 blur-sm"></div>
       
@@ -84,7 +89,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {/* Main Speed Display */}
           <div className="text-center mb-2">
-            <div className="text-5xl font-mono font-bold text-white leading-none tracking-wider" style={{
+            <div className="text-4xl font-mono font-bold text-white leading-none tracking-wider" style={{
               fontFamily: 'Orbitron, monospace',
               textShadow: '0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.4)',
               filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.6))'
@@ -133,13 +138,6 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
         </div>
       </div>
 
-      {/* Mode Indicators */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-        <div className="text-cyan-400 text-sm font-mono font-semibold tracking-wider">
-          {speed > 0 ? 'DRIVE' : 'PARK'}
-        </div>
-      </div>
-
       {/* Bottom Icon Space */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <div className="w-16 h-16 bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-full flex items-center justify-center">
@@ -170,7 +168,7 @@ const SpeedGauge = ({ speed, batteryLevel }: SpeedGaugeProps) => {
             156 kW
           </span>
           <span>•</span>
-          <span>ECO MODE</span>
+          <span>DRIVE</span>
         </div>
       </div>
     </div>

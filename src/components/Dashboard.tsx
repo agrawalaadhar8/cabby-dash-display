@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import SpeedGauge from './SpeedGauge';
 import ClockDisplay from './ClockDisplay';
@@ -84,8 +85,8 @@ const Dashboard = () => {
         {/* Main Dashboard Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
           
-          {/* Left Side - Swipeable Info Card */}
-          <div className="lg:col-span-3">
+          {/* Left Side - Swipeable Info Card - Fixed height matching speedometer */}
+          <div className="lg:col-span-3 h-96">
             <SwipeableInfoCard 
               batteryLevel={batteryLevel}
               isCharging={isCharging}
@@ -104,16 +105,15 @@ const Dashboard = () => {
             <SpeedGauge speed={speed} batteryLevel={batteryLevel} />
           </div>
 
-          {/* Right Side - Rider Details (now swipeable) */}
-          <div className="lg:col-span-3">
+          {/* Right Side - Rider Details (now swipeable) - Fixed height matching speedometer */}
+          <div className="lg:col-span-3 h-96">
             <SwipeableRiderDetails />
           </div>
         </div>
 
-        {/* Bottom Status Bar (moved from top) */}
+        {/* Bottom Status Bar (simplified - removed ECO MODE) */}
         <div className="flex justify-between items-center mt-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
           <div className="flex items-center space-x-6">
-            <h1 className="text-2xl font-bold text-cyan-400 tracking-wider">ECO MODE</h1>
             <div className="text-sm text-gray-400">
               Status: <span className="text-green-400 font-semibold">ACTIVE</span>
             </div>

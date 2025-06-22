@@ -82,36 +82,37 @@ const Dashboard = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-4 h-screen flex flex-col">
-        {/* Main Dashboard Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
-          
-          {/* Left Side - Swipeable Info Card - Fixed height matching speedometer */}
-          <div className="lg:col-span-3 h-96">
-            <SwipeableInfoCard 
-              batteryLevel={batteryLevel}
-              isCharging={isCharging}
-              onToggleCharging={() => setIsCharging(!isCharging)}
-              rideStatus={rideStatus}
-              isOnline={isOnline}
-              onToggleOnlineStatus={handleToggleOnlineStatus}
-              onAcceptRide={handleAcceptRide}
-              onStartRide={handleStartRide}
-              onEndRide={handleEndRide}
-            />
-          </div>
+        {/* Main Dashboard Layout - Fixed height container */}
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="flex items-center justify-center gap-6 h-96">
+            {/* Left Side - Swipeable Info Card */}
+            <div className="w-80 h-full">
+              <SwipeableInfoCard 
+                batteryLevel={batteryLevel}
+                isCharging={isCharging}
+                onToggleCharging={() => setIsCharging(!isCharging)}
+                rideStatus={rideStatus}
+                isOnline={isOnline}
+                onToggleOnlineStatus={handleToggleOnlineStatus}
+                onAcceptRide={handleAcceptRide}
+                onStartRide={handleStartRide}
+                onEndRide={handleEndRide}
+              />
+            </div>
 
-          {/* Center - Main Speed Gauge */}
-          <div className="lg:col-span-6 flex items-center justify-center">
-            <SpeedGauge speed={speed} batteryLevel={batteryLevel} />
-          </div>
+            {/* Center - Main Speed Gauge */}
+            <div className="flex items-center justify-center h-full">
+              <SpeedGauge speed={speed} batteryLevel={batteryLevel} />
+            </div>
 
-          {/* Right Side - Rider Details (now swipeable) - Fixed height matching speedometer */}
-          <div className="lg:col-span-3 h-96">
-            <SwipeableRiderDetails />
+            {/* Right Side - Rider Details (swipeable) */}
+            <div className="w-80 h-full">
+              <SwipeableRiderDetails />
+            </div>
           </div>
         </div>
 
-        {/* Bottom Status Bar (simplified - removed ECO MODE) */}
+        {/* Bottom Status Bar - positioned right below the main content */}
         <div className="flex justify-between items-center mt-6 bg-gray-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4">
           <div className="flex items-center space-x-6">
             <div className="text-sm text-gray-400">

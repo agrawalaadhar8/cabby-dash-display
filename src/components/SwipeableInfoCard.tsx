@@ -424,6 +424,7 @@ const SwipeableInfoCard = ({
   // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(0); // Reset touchEnd
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -443,6 +444,10 @@ const SwipeableInfoCard = ({
     if (isRightSwipe) {
       prevCard();
     }
+
+    // Reset touch values
+    setTouchStart(0);
+    setTouchEnd(0);
   };
 
   const nextCard = () => {
@@ -463,30 +468,14 @@ const SwipeableInfoCard = ({
 
   return (
     <div 
-      className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 relative select-none h-full"
+      className="bg-gray-900/60 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-4 relative select-none h-full touch-pan-y"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      style={{ touchAction: 'pan-y' }}
     >
-      {/* Navigation arrows */}
-      <button
-        onClick={prevCard}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors touch-manipulation"
-        disabled={cards.length <= 1}
-      >
-        <ChevronLeft className="h-5 w-5 text-cyan-400" />
-      </button>
-      
-      <button
-        onClick={nextCard}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors touch-manipulation"
-        disabled={cards.length <= 1}
-      >
-        <ChevronRight className="h-5 w-5 text-cyan-400" />
-      </button>
-
       {/* Card content */}
-      <div className="px-8 h-full flex flex-col">
+      <div className="h-full flex flex-col">
         <h3 className="text-lg font-semibold text-cyan-400 mb-3 tracking-wide text-center">
           {cards[currentCard].title}
         </h3>
